@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { ClientCredentioal } from "../interfaces/auth.service";
+import { ClientCredentioal, UserRegestrationData } from "../interfaces/auth.service";
 import { AddNewClientRes } from "../interfaces/clients.services";
 import { AuthFailure, ClientFailure } from "../interfaces/enums";
 import AuthServices from '../services/auth';
@@ -9,13 +9,13 @@ export default class AuthController {
     // login route handler
     loginHandler = async (req: Request, res: Response) => {
         // client credenatioal form req body
-        const credenaioals: ClientCredentioal = req.body;
+        const credenaioals = req.body as ClientCredentioal;
         try {
             const loginRes = await authServices.login(credenaioals);
-            // client login failre
+            // determine statusCode depend on loginRes
             if(loginRes === AuthFailure.LOGIN_FAIL) {
-                res.status(400).send({msg: "client dosn't exist"})
-                return 
+                res.status(400).send({msg: "Client Dosnot Exist"});
+                return
             }
             res.send(loginRes)
         } catch(err) {
@@ -58,9 +58,12 @@ export default class AuthController {
     }
     // signup
     signUpHandler = async (req: Request, res: Response) => {
-        const signUpData = req.body as {name: string, password: string}
+        // request body or request data
+        const signUpData = req.body as UserRegestrationData;
         try {
+            // call the SignUp authService and pass reqData to it, and receive the response
             const resData = await authServices.signUp(signUpData);
+            // determine the res statusCode depend on SignUp ouput
             const resStatus = resData === AddNewClientRes.CLIENT_EXIST ? 400 : 200
             res.status(resStatus).send(resData)
         } catch(err) {

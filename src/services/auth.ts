@@ -1,6 +1,6 @@
 import { OAuth2Client, TokenPayload } from "google-auth-library";
 import JWT from "jsonwebtoken";
-import { ClientCredentioal, LoginSuccess } from '../interfaces/auth.service';
+import { ClientCredentioal, LoginSuccess, SignUpSuccess, UserRegestrationData } from '../interfaces/auth.service';
 import { AddNewClientParams, AddNewClientRes, Client } from "../interfaces/clients.services";
 import { AuthFailure, ClientFailure } from "../interfaces/enums";
 import ClientsService from "./clients"
@@ -13,14 +13,14 @@ export default class AuthServices {
       return new Promise(async(resolve, reject) => {
         // get client from the data base
         try {
-          const data = await this.clientsServices.findClient(credeantioal);
+          const findClientRes = await this.clientsServices.findClient(credeantioal);
           // if client is exist
-          if (data === ClientFailure.CLIENT_NOT_EXIST) {
+          if (findClientRes === ClientFailure.CLIENT_NOT_EXIST) {
             // send data to the client
             resolve(AuthFailure.LOGIN_FAIL)
             return
           }
-          const {_id, account, avatar, transactionsHistory, name} = data;
+          const {_id, account, avatar, transactionsHistory, name} = findClientRes;
           // client data that will be send
           const client = { _id, name, account, transactionsHistory, avatar };
           // generate token to the client
@@ -43,11 +43,11 @@ export default class AuthServices {
         audience: process.env.GOOGLE_AUTH_CLIENT_ID!
       })
       // get logged in data
-      const {name} = googleTicket.getPayload() as TokenPayload;
+      const {email} = googleTicket.getPayload() as TokenPayload;
       // adding client to database
       try {
         // call add new client function
-        const getClientRes = await this.clientsServices.findClientByName(name!);
+        const getClientRes = await this.clientsServices.findClientByEmail(email!);
         // check if client exist
         if(getClientRes === ClientFailure.CLIENT_NOT_EXIST) {
           resolve(ClientFailure.CLIENT_NOT_EXIST);
@@ -109,7 +109,7 @@ export default class AuthServices {
           return
         }
         // get the data of new client
-        const {_id, name: currentUserName, account, transactionsHistory, avatar} = await this.clientsServices.findClient({name: name!, password: email!}) as Client
+        const {_id, name: currentUserName, account, transactionsHistory, avatar} = await this.clientsServices.findClient({email: email!, password: email!}) as Client
         // client data that will be send
         const client = { _id, name: currentUserName, account, transactionsHistory, avatar };
         // generate token to the client
@@ -123,18 +123,18 @@ export default class AuthServices {
     })
   }
   // signUp
-  signUp = ({name, password}: {name: string, password: string}): Promise<LoginSuccess | AddNewClientRes.CLIENT_EXIST> => {
+  signUp = ({username, password, email}: UserRegestrationData): Promise<SignUpSuccess | AddNewClientRes.CLIENT_EXIST> => {
     return new Promise(async (resolve, reject) => {
       try {
         // call add new client service
-        const addClientRes = await this.clientsServices.addNewClient({name, password, email: ""});
+        const addClientRes = await this.clientsServices.addNewClient({name: username, password, email});
         // check for add client res
         if(addClientRes === AddNewClientRes.CLIENT_EXIST) {
           resolve(AddNewClientRes.CLIENT_EXIST);
           return
         }
         // get the data of new client
-        const {_id, name: currentUserName, account, transactionsHistory, avatar} = await this.clientsServices.findClient({name, password}) as Client
+        const {_id, name: currentUserName, account, transactionsHistory, avatar} = await this.clientsServices.findClient({email, password}) as Client
         // client data that will be send
         const client = { _id, name: currentUserName, account, transactionsHistory, avatar };
         // generate token to the client

@@ -10,7 +10,11 @@ const ClientSchema = new mongoose.Schema<Client, Model<Client>>({
     balance: Number, // client balance
   },
   phone: String, // client phone
-  socket_id: String
+  socket_id: String,
+  email: {
+    required: true,
+    type: String
+  }
 });
 // client model
 const ClientModel = mongoose.model("clients", ClientSchema)

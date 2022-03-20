@@ -33,7 +33,7 @@ export default class TransServices {
       // transfer details comes from client
       return new Promise(async(resolve, reject) => {
         // enums
-        const {CLIENT_NOT_EXIST} = ClientFailure;
+        const {CLIENT_NOT_EXIST, SAME_RECEIVER_AND_CURRENT} = ClientFailure;
         const {UN_SUFFICENT_FUND} = TransactionErr;
         try {
           // get the current client balance
@@ -50,7 +50,12 @@ export default class TransServices {
             return
           }
           // client exist and has suficient balance
-          const receiver = await clientsServices.getReceiver(receiverPhone);
+          const receiver = await clientsServices.getReceiver({currentClientId: client_id, receiverContact: receiverPhone});
+          // check if c.client and receiver are same
+          if(receiver === SAME_RECEIVER_AND_CURRENT) {
+            resolve(SAME_RECEIVER_AND_CURRENT);
+            return
+          }
           // if receiver dosn't exist
           if(receiver === CLIENT_NOT_EXIST) {
             reject(CLIENT_NOT_EXIST)

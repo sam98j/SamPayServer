@@ -4,6 +4,7 @@ import {
   AddNewClientParams,
   AddNewClientRes,
   Client, 
+  GetReceiverParams, 
   SingleTransaction, 
   updateClientBalanceParams, 
   UpdateSocketIdRes, 
@@ -33,11 +34,11 @@ export default class ClientsService {
     })
   }
   // get client by his name later on we will use email
-  findClientByName = (clientName: string): Promise<Client | ClientFailure.CLIENT_NOT_EXIST> => {
+  findClientByEmail = (email: string): Promise<Client | ClientFailure.CLIENT_NOT_EXIST> => {
     return new Promise(async (resolve, reject) => {
       // return Promise
       try {
-        const client = await this.Model.findOne({name: clientName} as FilterQuery<Client>) as Client | null;
+        const client = await this.Model.findOne({email} as FilterQuery<Client>) as Client | null;
         // client dosnot exist
         if(!client) {
           resolve(ClientFailure.CLIENT_NOT_EXIST);
@@ -66,15 +67,33 @@ export default class ClientsService {
     })
   }
   // get receiver by phone number
-  getReceiver = (phone: string): Promise<Client | ClientFailure.CLIENT_NOT_EXIST> => {
+  getReceiver = ({receiverContact, currentClientId}: GetReceiverParams): Promise<Client | ClientFailure> => {
     return new Promise(async (resolve, reject) => {
       try {
-        const client = await this.Model.findOne({phone}) as Client | null;
-        if(!client) {
+        // get the current client
+        const getCurrentClientRes = await this.findClientById(currentClientId);
+        // check if client dosnot exist
+        if(getCurrentClientRes === ClientFailure.CLIENT_NOT_EXIST) {
+          resolve(ClientFailure.CLIENT_NOT_EXIST);
+          return
+        }
+        // get the email and phone of current client
+        const {email, phone} = getCurrentClientRes;
+        // check if receiver is the currentClient itself
+        if(receiverContact === email || receiverContact === phone){
+          resolve(ClientFailure.SAME_RECEIVER_AND_CURRENT);
+          return
+        }
+        // determine the method that we will use to grap the receiver
+        const receiverContactType = Boolean(Number(receiverContact)) ? "phone" : "email";
+        // the receiver
+        const receiver = await this.Model.findOne({[receiverContactType]: receiverContact}) as Client | null;
+        // if receiver dosenot exist
+        if(!receiver) {
           resolve(ClientFailure.CLIENT_NOT_EXIST)
           return
         }
-        resolve(client)
+        resolve(receiver)
       } catch(err) {reject(err)}
     })
   }
@@ -162,20 +181,24 @@ export default class ClientsService {
   // add new client
   addNewClient = ({name, pic = "", email, password}: AddNewClientParams): Promise<AddNewClientRes> => {
     return new Promise(async (resolve, reject) => {
-      const {CLIENT_EXIST, CLIENT_ADDED_SUCC} = AddNewClientRes;
-      // create new client
-      const newClient = {
-        name,
-        password,
-        avatar: pic,
-        transactionsHistory: [],
-        account: {balance: "0"},
-        socket_id: ""
-      } as Client
       try {
-        const client = await this.findClientByName(name);
-        // check if client is exist
+        // findclient by Email
+        const client = await this.findClientByEmail(email);
+        // promise will response with these
+        const {CLIENT_EXIST, CLIENT_ADDED_SUCC} = AddNewClientRes;
+        // check if client is not exist
         if(client === ClientFailure.CLIENT_NOT_EXIST) {
+          // create new client
+          const newClient = {
+            name,
+            password,
+            avatar: pic,
+            transactionsHistory: [],
+            account: {balance: "200"},
+            socket_id: "",
+            email
+          } as Client
+          // add the new client to database
           await this.Model.insertMany([newClient]);
           resolve(CLIENT_ADDED_SUCC);
           return

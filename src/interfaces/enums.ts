@@ -3,6 +3,7 @@ export enum AuthFailure {
 }
 export enum ClientFailure {
     CLIENT_NOT_EXIST = "CLIENT_NOT_EXIST",
+    SAME_RECEIVER_AND_CURRENT = "SAME_RECEIVER_AND_CURRENT"
 }
 // Transactions enums
 export enum TransactionErr {

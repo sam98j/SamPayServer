@@ -9,15 +9,24 @@ const transactionsService = new TransServices()
 export default class TransController {
     // get reciver handler
     getReceiverHandler = async(req: Request, res: Response) => {
-        // receiver phone
-        const {receiverPhone} = req.body as GetReceiverBody;
+        // receiver phone or email
+        const {receiverContact} = req.body as GetReceiverBody;
         try {
-            const client = await clientsServices.getReceiver(receiverPhone);
+            // get receiver
+            const client = await clientsServices.getReceiver({receiverContact, currentClientId: req.currentClient!});
+            // check if receiver is not exist
             if(client === ClientFailure.CLIENT_NOT_EXIST) {
                 const resObj = {err: "client dosnot exist"}
                 res.status(400).send(resObj)
                 return
             }
+            // check if r.client and c.client are the same
+            if(client === ClientFailure.SAME_RECEIVER_AND_CURRENT) {
+                const resObj = {err: "You Can't send to your self"};
+                res.status(400).send(resObj);
+                return
+            }
+            // there is no error
             const resObj = client
             res.status(200).send(resObj)
         } catch(err) {

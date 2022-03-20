@@ -3,7 +3,7 @@ import { responseObj } from "./global";
 
 // the client login credentioal
 export interface ClientCredentioal {
-    name: String;
+    email: String;
     password: String;
 } 
 // when use authentecation is succeed
@@ -18,5 +18,16 @@ export interface AuthFaild extends responseObj{
 // when use authentecation is succeed
 export interface LoginSuccess extends responseObj{
     token: string,
-    client: Client;
+    client: Client
+}
+// new User Regestration data
+export interface UserRegestrationData {
+    username: string, 
+    password: string, 
+    email: string
+}
+// SignUp Succeded Interface
+export interface SignUpSuccess {
+    token: string;
+    client: Client
 }

@@ -10,7 +10,8 @@ export interface Client {
   transactionsHistory: []; // history of transactions
   avatar: string; // client image
   phone?: any,
-  socket_id?: string
+  socket_id?: string,
+  email: string
 }
 // single transaction is history
 export interface SingleTransaction {
@@ -48,4 +49,9 @@ export interface AddNewClientParams {
 export enum AddNewClientRes {
   CLIENT_EXIST = "CLIENT_EXIST",
   CLIENT_ADDED_SUCC = "CLIENT_ADDED_SUCC"
+}
+// getReceiver Params
+export interface GetReceiverParams {
+  receiverContact: string;
+  currentClientId: string
 }

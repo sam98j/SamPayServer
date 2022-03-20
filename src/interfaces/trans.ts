@@ -13,7 +13,7 @@ export interface GetReceiverRes extends responseObj{
 }
 // body of request ot get the receiver client
 export interface GetReceiverBody {
-    receiverPhone: string
+    receiverContact: string
 }
 // body of request to submit transfer money
 export interface SubmitTransBody {
