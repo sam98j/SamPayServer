@@ -7,6 +7,6 @@ const Router = express.Router()
 // get the client that want to send money to him
 Router.post("/transfer/get_receiver", validateClientMiddleware,TransHandlers.getReceiverHandler)
 // submit money transfer
-Router.post("/transfer/submit_transfer", validateClientMiddleware, TransHandlers.submitTransfer)
+Router.post("/transfer/submit_transfer", validateClientMiddleware, TransHandlers.submitTransferHandler)
 
 export default Router

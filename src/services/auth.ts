@@ -9,7 +9,7 @@ export default class AuthServices {
   private clientsServices = new ClientsService();
   googleOauthClient = new OAuth2Client(process.env.GOOGLE_AUTH_CLIENT_ID!);
   // login service 
-  login = (credeantioal: ClientCredentioal): Promise<AuthFailure.LOGIN_FAIL | LoginSuccess> => {
+  login = (credeantioal: ClientCredentioal): Promise<AuthFailure | LoginSuccess> => {
       return new Promise(async(resolve, reject) => {
         // get client from the data base
         try {
@@ -20,7 +20,13 @@ export default class AuthServices {
             resolve(AuthFailure.LOGIN_FAIL)
             return
           }
-          const {_id, account, avatar, transactionsHistory, name} = findClientRes;
+          // if password is incorrect
+          if(findClientRes === ClientFailure.PASSWORD_NOT_CORRECT) {
+            resolve(AuthFailure.PASSWORD_NOT_CORRECT);
+            return
+          }
+          // client is exist and password is correct
+          const {_id, account, avatar, transactionsHistory, name} = findClientRes as Client;
           // client data that will be send
           const client = { _id, name, account, transactionsHistory, avatar };
           // generate token to the client
@@ -109,7 +115,7 @@ export default class AuthServices {
           return
         }
         // get the data of new client
-        const {_id, name: currentUserName, account, transactionsHistory, avatar} = await this.clientsServices.findClient({email: email!, password: email!}) as Client
+        const {_id, name: currentUserName, account, transactionsHistory, avatar} = await this.clientsServices.findClientByEmail(email!) as Client
         // client data that will be send
         const client = { _id, name: currentUserName, account, transactionsHistory, avatar };
         // generate token to the client
@@ -134,7 +140,7 @@ export default class AuthServices {
           return
         }
         // get the data of new client
-        const {_id, name: currentUserName, account, transactionsHistory, avatar} = await this.clientsServices.findClient({email, password}) as Client
+        const {_id, name: currentUserName, account, transactionsHistory, avatar} = await this.clientsServices.findClientByEmail(email) as Client
         // client data that will be send
         const client = { _id, name: currentUserName, account, transactionsHistory, avatar };
         // generate token to the client

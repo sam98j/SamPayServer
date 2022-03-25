@@ -29,11 +29,12 @@ export default class TransServices {
       })
     }
     // submit transfer
-    submitTransfer = ({client_id, receiverPhone, amount}: SubmitTransPrams) => {
+    submitTransfer = ({client_id, receiverContact, amount}: SubmitTransPrams) => {
       // transfer details comes from client
       return new Promise(async(resolve, reject) => {
-        // enums
+        // GetReceiver errors
         const {CLIENT_NOT_EXIST, SAME_RECEIVER_AND_CURRENT} = ClientFailure;
+        // Transactions Errors
         const {UN_SUFFICENT_FUND} = TransactionErr;
         try {
           // get the current client balance
@@ -50,7 +51,7 @@ export default class TransServices {
             return
           }
           // client exist and has suficient balance
-          const receiver = await clientsServices.getReceiver({currentClientId: client_id, receiverContact: receiverPhone});
+          const receiver = await clientsServices.getReceiver({currentClientId: client_id, receiverContact});
           // check if c.client and receiver are same
           if(receiver === SAME_RECEIVER_AND_CURRENT) {
             resolve(SAME_RECEIVER_AND_CURRENT);
@@ -62,16 +63,17 @@ export default class TransServices {
             return
           }
           // if no error
+          const {_id, socket_id} = receiver as Client
           // complete trans params
           const completeTransferParams = {
             _id: client_id,
-            receiverId: receiver._id,
+            receiverId: _id,
             amount
           } as CompleteTransPrams
           // complete transfer res
           const TransferData = await this.completeTransfer(completeTransferParams);
           // receiver new balance
-          const receiverUpdatedBalance = await clientsServices.getClientBalance(receiver._id!);
+          const receiverUpdatedBalance = await clientsServices.getClientBalance(_id!);
           // get the sender client
           const {name: sender} = await clientsServices.findClientById(client_id) as Client
           // response data 
@@ -87,7 +89,7 @@ export default class TransServices {
             sender
           }
           // send the receiver updated balance to the recevier
-          io.to(receiver.socket_id!).emit("notification", receiverNotification)
+          io.to(socket_id!).emit("notification", receiverNotification)
           resolve(resData)
         } catch(err) {
           reject(err)

@@ -34,13 +34,13 @@ export default class TransController {
         }
     }
     // submit transfer
-    async submitTransfer(req: Request, res: Response){
+    submitTransferHandler = async (req: Request, res: Response) => {
         // transaction amount and receiver phone number
-        const {amount, receiverPhone} = req.body as SubmitTransBody;
+        const {amount, receiverContact} = req.body as SubmitTransBody;
         // submit transaction params
         const submitTransPrams = {
             amount, 
-            receiverPhone,
+            receiverContact,
             client_id: req.currentClient! 
         } as SubmitTransPrams
         // 

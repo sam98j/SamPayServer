@@ -3,8 +3,8 @@ import { responseObj } from "./global";
 
 // the client login credentioal
 export interface ClientCredentioal {
-    email: String;
-    password: String;
+    email: string;
+    password: string;
 } 
 // when use authentecation is succeed
 export interface IntSuccess extends responseObj{

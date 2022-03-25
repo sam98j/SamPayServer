@@ -13,20 +13,31 @@ import {
 import { ClientFailure } from "../interfaces/enums";
 import ClientsModel from '../models/clients'
 import moment from "moment";
+import { comparePassword, hashPassword } from "../utils/auth";
 
 export default class ClientsService {
   private Model = ClientsModel;
   // find client by credentioal
-  findClient = (credentioal: ClientCredentioal): Promise<Client | ClientFailure.CLIENT_NOT_EXIST> => {
+  findClient = (credentioal: ClientCredentioal): Promise<Client | ClientFailure> => {
     return new Promise(async (resolve, reject) => {
       // return Promise
       try {
-        const client = await this.Model.findOne({...credentioal} as FilterQuery<Client>) as Client | null;
+        const {password, email} = credentioal;
+        // get client by email
+        const client = await this.Model.findOne({email} as FilterQuery<Client>) as Client | null;
         // client dosnot exist
         if(!client) {
           resolve(ClientFailure.CLIENT_NOT_EXIST);
           return
         }
+        // compare password
+        const isPasswordValid = await comparePassword(password, client.password!)
+        // if the password is not valid
+        if(!isPasswordValid) {
+          resolve(ClientFailure.PASSWORD_NOT_CORRECT);
+          return
+        }
+        // the client exist and password is valid
         resolve(client)
       } catch(err) {
         reject(err)
@@ -39,6 +50,7 @@ export default class ClientsService {
       // return Promise
       try {
         const client = await this.Model.findOne({email} as FilterQuery<Client>) as Client | null;
+        // compare
         // client dosnot exist
         if(!client) {
           resolve(ClientFailure.CLIENT_NOT_EXIST);
@@ -186,25 +198,29 @@ export default class ClientsService {
         const client = await this.findClientByEmail(email);
         // promise will response with these
         const {CLIENT_EXIST, CLIENT_ADDED_SUCC} = AddNewClientRes;
-        // check if client is not exist
-        if(client === ClientFailure.CLIENT_NOT_EXIST) {
-          // create new client
-          const newClient = {
-            name,
-            password,
-            avatar: pic,
-            transactionsHistory: [],
-            account: {balance: "200"},
-            socket_id: "",
-            email
-          } as Client
-          // add the new client to database
-          await this.Model.insertMany([newClient]);
-          resolve(CLIENT_ADDED_SUCC);
+        // check if client is exist
+        if(client !== ClientFailure.CLIENT_NOT_EXIST) {
+          // client exist
+          resolve(CLIENT_EXIST);
           return
         }
-        // client exist
-        resolve(CLIENT_EXIST)
+        // create new client
+        const newClientData = {
+          name,
+          password,
+          avatar: pic,
+          transactionsHistory: [],
+          account: {balance: "200"},
+          socket_id: "",
+          email
+        } as Client
+        // add the new client to database
+        const newClient = new this.Model(newClientData);
+        // replace the password with hashed password
+        newClient.password = await hashPassword(password);
+        await newClient.save()
+        resolve(CLIENT_ADDED_SUCC);
+        return
       } catch(err) {
         reject(err)
       }

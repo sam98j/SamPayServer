@@ -9,7 +9,7 @@ export default class ConfigDB {
     // excute the database
     run(){
         mongoose.connect(this.uri)
-        .then(() => console.log("database running"))
+        .then(() => console.log("database connected"))
         .catch(err => console.log(err))
     }
 }

@@ -8,15 +8,21 @@ const authServices = new AuthServices();
 export default class AuthController {
     // login route handler
     loginHandler = async (req: Request, res: Response) => {
-        // client credenatioal form req body
-        const credenaioals = req.body as ClientCredentioal;
         try {
+            // client credenatioal form req body
+            const credenaioals = req.body as ClientCredentioal;
             const loginRes = await authServices.login(credenaioals);
-            // determine statusCode depend on loginRes
+            // check if client dosenot exist
             if(loginRes === AuthFailure.LOGIN_FAIL) {
                 res.status(400).send({msg: "Client Dosnot Exist"});
                 return
             }
+            // check if client password is incorrect
+            if(loginRes === AuthFailure.PASSWORD_NOT_CORRECT) {
+                res.status(400).send({msg: "Password is inCorrect"});
+                return
+            }
+            // client exist and password is correct
             res.send(loginRes)
         } catch(err) {
             res.status(500).send({msg: "internal server error", err})

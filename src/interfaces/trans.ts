@@ -17,7 +17,7 @@ export interface GetReceiverBody {
 }
 // body of request to submit transfer money
 export interface SubmitTransBody {
-    receiverPhone: string;
+    receiverContact: string;
     amount: number
 }
 // response of request to submit transfer money
@@ -28,7 +28,7 @@ export interface SubmitTransRes {
 // submit transfer service
 export interface SubmitTransPrams {
     client_id: string;
-    receiverPhone: string;
+    receiverContact: string;
     amount: number
 }
 // complete transfer params
