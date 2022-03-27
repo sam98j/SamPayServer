@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "@heroku-cli/plugin-buildpacks": "^7.54.0",
+    "@sendgrid/mail": "^7.6.2",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",

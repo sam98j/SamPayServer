@@ -13,5 +13,7 @@ Router.post("/signup_with_google", AuthHandlers.signUpWithGoogle)
 Router.post("/signup", AuthHandlers.signUpHandler)
 // route to check if user is already login
 Router.get("/initate_client",validateClientMiddleware , AuthHandlers.InitateClientHandler);
+// route to send mail
+Router.post("/sendmail", AuthHandlers.sendMailHandler);
 // export Router as default
 export default Router;

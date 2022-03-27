@@ -3,6 +3,8 @@ import { ClientCredentioal, UserRegestrationData } from "../interfaces/auth.serv
 import { AddNewClientRes } from "../interfaces/clients.services";
 import { AuthFailure, ClientFailure } from "../interfaces/enums";
 import AuthServices from '../services/auth';
+import {MailDataRequired} from '@sendgrid/mail';
+import {sendMail} from '../services/mail'
 const authServices = new AuthServices();
 
 export default class AuthController {
@@ -74,6 +76,22 @@ export default class AuthController {
             res.status(resStatus).send(resData)
         } catch(err) {
             res.status(500).send(err)
+        }
+    }
+    // mail Handler
+    sendMailHandler = async (req: Request, res: Response) => {
+        const {receiver} = req.body as {receiver: string};
+        const mailData = {
+            to: receiver,
+            from: "hosam98j@hotmail.com",
+            subject: "test subject",
+            text: "test text"
+        } as MailDataRequired;
+        try {
+            const response = await sendMail(mailData);
+            res.send(response)
+        } catch (error) {
+            res.status(500).send(error)
         }
     }
 }
