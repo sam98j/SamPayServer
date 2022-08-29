@@ -1,6 +1,7 @@
 import Express, { Application, Request, Response } from "express";
 import AuthRoutes from "../routes/auth";
 import MainRoutes from "../routes/transactions";
+import FilesUploadRoutes from '../routes/uploading';
 import DataReportsRoutes from '../routes/reports'
 import cors from "cors";
 import {Configs} from "../interfaces/server.config"
@@ -33,6 +34,8 @@ export class ServerConfigs implements Configs{
         this.app.use("/", MainRoutes);
         // DataReports Routes
         this.app.use("/reports", DataReportsRoutes)
+        // file uploading routes
+        this.app.use('/files', FilesUploadRoutes)
         // 
         this.app.get("*", (req: Request, res: Response) => {
             res.sendFile(join(__dirname, "../../public/index.html"))

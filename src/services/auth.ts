@@ -129,11 +129,11 @@ export default class AuthServices {
     })
   }
   // signUp
-  signUp = ({username, password, email}: UserRegestrationData): Promise<SignUpSuccess | AddNewClientRes.CLIENT_EXIST> => {
+  signUp = ({username, password, email, profile_img_url}: UserRegestrationData): Promise<SignUpSuccess | AddNewClientRes.CLIENT_EXIST> => {
     return new Promise(async (resolve, reject) => {
       try {
         // call add new client service
-        const addClientRes = await this.clientsServices.addNewClient({name: username, password, email});
+        const addClientRes = await this.clientsServices.addNewClient({name: username, password, email, pic: profile_img_url});
         // check for add client res
         if(addClientRes === AddNewClientRes.CLIENT_EXIST) {
           resolve(AddNewClientRes.CLIENT_EXIST);

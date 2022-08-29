@@ -24,7 +24,8 @@ export interface LoginSuccess extends responseObj{
 export interface UserRegestrationData {
     username: string, 
     password: string, 
-    email: string
+    email: string,
+    profile_img_url: any
 }
 // SignUp Succeded Interface
 export interface SignUpSuccess {
