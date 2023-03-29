@@ -12,7 +12,7 @@ export default class FilesUploadController {
         await uploadBytes(imgRef, file?.buffer!, metaType)
         .then((snapshot) => {
             getDownloadURL(ref(firebaseStorage, file?.originalname))
-            .then(url => res.send(url))
+            .then(url => res.send({url}))
             .catch(err => console.log(err))
         })
         .catch(err => console.log(err.message))
