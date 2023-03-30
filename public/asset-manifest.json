@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/static/css/main.42688a85.css",
-    "main.js": "/static/js/main.5d29c854.js",
+    "main.js": "/static/js/main.e0acd87e.js",
     "static/media/hugo-payment-processed.png": "/static/media/hugo-payment-processed.18f748be906bd754b093.png",
     "static/media/sfprotext-medium-webfont.woff": "/static/media/sfprotext-medium-webfont.b76572b7c0141237a932.woff",
     "static/media/sfprotext-medium-webfont.woff2": "/static/media/sfprotext-medium-webfont.515efeca006679881525.woff2",
     "index.html": "/index.html",
     "main.42688a85.css.map": "/static/css/main.42688a85.css.map",
-    "main.5d29c854.js.map": "/static/js/main.5d29c854.js.map"
+    "main.e0acd87e.js.map": "/static/js/main.e0acd87e.js.map"
   },
   "entrypoints": [
     "static/css/main.42688a85.css",
-    "static/js/main.5d29c854.js"
+    "static/js/main.e0acd87e.js"
   ]
 }
