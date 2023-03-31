@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/static/css/main.42688a85.css",
-    "main.js": "/static/js/main.e0acd87e.js",
-    "static/media/hugo-payment-processed.png": "/static/media/hugo-payment-processed.18f748be906bd754b093.png",
+    "main.css": "/static/css/main.d3090e3e.css",
+    "main.js": "/static/js/main.4a4678b0.js",
+    "static/media/Transactional-SMS.svg": "/static/media/Transactional-SMS.9f7b70323bcb7cef505fa321b94fbec0.svg",
     "static/media/sfprotext-medium-webfont.woff": "/static/media/sfprotext-medium-webfont.b76572b7c0141237a932.woff",
     "static/media/sfprotext-medium-webfont.woff2": "/static/media/sfprotext-medium-webfont.515efeca006679881525.woff2",
     "index.html": "/index.html",
-    "main.42688a85.css.map": "/static/css/main.42688a85.css.map",
-    "main.e0acd87e.js.map": "/static/js/main.e0acd87e.js.map"
+    "main.d3090e3e.css.map": "/static/css/main.d3090e3e.css.map",
+    "main.4a4678b0.js.map": "/static/js/main.4a4678b0.js.map"
   },
   "entrypoints": [
-    "static/css/main.42688a85.css",
-    "static/js/main.e0acd87e.js"
+    "static/css/main.d3090e3e.css",
+    "static/js/main.4a4678b0.js"
   ]
 }
