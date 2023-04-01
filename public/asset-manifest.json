@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/static/css/main.d3090e3e.css",
+    "main.css": "/static/css/main.b20369fd.css",
     "main.js": "/static/js/main.4a4678b0.js",
     "static/media/Transactional-SMS.svg": "/static/media/Transactional-SMS.9f7b70323bcb7cef505fa321b94fbec0.svg",
     "static/media/sfprotext-medium-webfont.woff": "/static/media/sfprotext-medium-webfont.b76572b7c0141237a932.woff",
     "static/media/sfprotext-medium-webfont.woff2": "/static/media/sfprotext-medium-webfont.515efeca006679881525.woff2",
     "index.html": "/index.html",
-    "main.d3090e3e.css.map": "/static/css/main.d3090e3e.css.map",
+    "main.b20369fd.css.map": "/static/css/main.b20369fd.css.map",
     "main.4a4678b0.js.map": "/static/js/main.4a4678b0.js.map"
   },
   "entrypoints": [
-    "static/css/main.d3090e3e.css",
+    "static/css/main.b20369fd.css",
     "static/js/main.4a4678b0.js"
   ]
 }
