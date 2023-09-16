@@ -9,7 +9,7 @@ import { join } from "path";
 // Server class
 class Server {
     // Express app object
-    private app: Application = Express();
+    public app: Application = Express();
     // the express app port
     private port: number | string = 1000;
     // http server
