@@ -48,10 +48,11 @@ export class ServerConfigs implements Configs {
       cors({
         origin: '*',
         methods: ['GET', 'POST'],
-      })
+      }),
     );
     // response json data
     this.app.use(Express.json());
+    this.app.use(Express.urlencoded({ extended: true }));
     this.app.use(Express.static(join(__dirname, '../../public')));
   }
   // config swagger
@@ -64,7 +65,7 @@ export class ServerConfigs implements Configs {
         swaggerOptions: {
           url: '/swagger.json',
         },
-      })
+      }),
     );
   }
   // run all the configs

@@ -1,19 +1,20 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response } from 'express';
 const Router = express.Router();
-import AuthController from "../controllers/auth";
-import { validateClientMiddleware } from "../utils/VierfyClient";
+import AuthController from '../controllers/auth';
+import { validateClientMiddleware } from '../utils/auth';
+import { multerUpload } from '../configs/multer';
 const AuthHandlers = new AuthController();
 // handle login route
-Router.post("/login", AuthHandlers.loginHandler);
+Router.post('/login', AuthHandlers.loginHandler);
 // login in with google
-Router.post("/login_with_google", AuthHandlers.loginWithGoogleHandler)
+Router.post('/login_with_google', AuthHandlers.loginWithGoogleHandler);
 // google auth
-Router.post("/signup_with_google", AuthHandlers.signUpWithGoogle)
+Router.post('/signup_with_google', AuthHandlers.signUpWithGoogle);
 // signUp user
-Router.post("/signup", AuthHandlers.signUpHandler)
+Router.post('/signup', multerUpload.single('profile_img'), AuthHandlers.signUpHandler);
 // route to check if user is already login
-Router.get("/initate_client",validateClientMiddleware , AuthHandlers.InitateClientHandler);
+Router.get('/initate_client', validateClientMiddleware, AuthHandlers.InitateClientHandler);
 // route to send mail
-Router.post("/sendmail", AuthHandlers.sendMailHandler);
+Router.post('/sendmail', AuthHandlers.sendMailHandler);
 // export Router as default
 export default Router;

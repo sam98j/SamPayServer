@@ -1,5 +1,5 @@
-import mongoose, { Model } from "mongoose";
-import { Client } from "../interfaces/clients.services";
+import mongoose, { Model } from 'mongoose';
+import { Client } from '../interfaces/clients.services';
 // create clientSchema
 const ClientSchema = new mongoose.Schema<Client, Model<Client>>({
   name: String,
@@ -13,10 +13,10 @@ const ClientSchema = new mongoose.Schema<Client, Model<Client>>({
   socket_id: String,
   email: {
     required: true,
-    type: String
-  }
+    type: String,
+  },
 });
 // client model
-const ClientModel = mongoose.model("clients", ClientSchema)
-// export 
+const ClientModel = mongoose.model('clients', ClientSchema);
+// export
 export default ClientModel;
